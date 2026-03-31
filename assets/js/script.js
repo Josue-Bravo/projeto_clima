@@ -133,10 +133,15 @@ searchBtn.addEventListener('click', async () => {
         clearError();
         setLoading(true);
 
-        const { latitude, longitude, name } = await fetchCoordinates(city);
+        const locationData = await fetchCoordinates(city);
+
+        const { latitude, longitude } = locationData;
+
         const data = await fetchWeather(latitude, longitude);
 
-        updateUI(data, name);
+        const formattedName = formatLocationName(locationData);
+
+        updateUI(data, formattedName);
 
     } catch (err) {
         showError(err.message);
@@ -215,6 +220,93 @@ function updateUI(data, name) {
     applyTempTheme(currentTemp);
     renderForecast(data.daily);
     showResult();
+}
+
+/**
+ * Formata o nome de exibição de uma localização retornada pela API de Geocoding.
+ * Adapta o formato conforme o tipo de lugar: cidade, estado ou país.
+ *
+ * @param {Object} location - Objeto de localização retornado pela API.
+ * @param {string} location.name - Nome do lugar.
+ * @param {string} location.country - Nome do país.
+ * @param {string} [location.admin1] - Nome do estado/província (opcional).
+ * @returns {string} Nome formatado para exibição. Ex: "São Paulo, SP, Brazil"
+ *
+ * @example
+ * formatLocationName({ name: 'Campinas', admin1: 'São Paulo', country: 'Brazil' });
+ * // 'Campinas, SP, Brazil'
+ *
+ * formatLocationName({ name: 'Rio de Janeiro', admin1: 'Rio de Janeiro', country: 'Brazil' });
+ * // 'Rio de Janeiro, RJ, Brazil'
+ *
+ * formatLocationName({ name: 'Brazil', country: 'Brazil' });
+ * // 'Brazil'
+ */
+function formatLocationName({ name, country, admin1 }) {
+    if (name.toLowerCase() === country?.toLowerCase()) return name;
+    if (!admin1) return `${name}, ${country}`;
+
+    const stateCode = getStateCode(admin1, country);
+    const regionLabel = stateCode ?? (admin1.toLowerCase() !== name.toLowerCase() ? admin1 : null);
+
+    return regionLabel
+        ? `${name}, ${regionLabel}, ${country}`
+        : `${name}, ${country}`;
+}
+
+/**
+ * Retorna a sigla (UF) de um estado brasileiro dado o nome completo.
+ * Retorna `null` para países estrangeiros ou estados não mapeados.
+ *
+ * @param {string|null} stateName - Nome completo do estado em português.
+ * @param {string|null} country - Nome do país em inglês ou português.
+ * @returns {string|null} Sigla do estado (ex: 'SP', 'RJ') ou `null` se não encontrado.
+ *
+ * @example
+ * getStateCode('São Paulo', 'Brazil');    // 'SP'
+ * getStateCode('California', 'US');       // null
+ * getStateCode(null, 'Brazil');           // null
+ */
+function getStateCode(stateName, country) {
+    if (!country || !stateName) return null;
+
+    const normalizedCountry = country.toLowerCase();
+
+    if (normalizedCountry !== 'brazil' && normalizedCountry !== 'brasil') {
+        return null;
+    }
+
+    const states = {
+        'acre': 'AC',
+        'alagoas': 'AL',
+        'amapá': 'AP',
+        'amazonas': 'AM',
+        'bahia': 'BA',
+        'ceará': 'CE',
+        'distrito federal': 'DF',
+        'espírito santo': 'ES',
+        'goiás': 'GO',
+        'maranhão': 'MA',
+        'mato grosso': 'MT',
+        'mato grosso do sul': 'MS',
+        'minas gerais': 'MG',
+        'pará': 'PA',
+        'paraíba': 'PB',
+        'paraná': 'PR',
+        'pernambuco': 'PE',
+        'piauí': 'PI',
+        'rio de janeiro': 'RJ',
+        'rio grande do norte': 'RN',
+        'rio grande do sul': 'RS',
+        'rondônia': 'RO',
+        'roraima': 'RR',
+        'santa catarina': 'SC',
+        'são paulo': 'SP',
+        'sergipe': 'SE',
+        'tocantins': 'TO'
+    };
+
+    return states[stateName.toLowerCase()] || null;
 }
 
 /**

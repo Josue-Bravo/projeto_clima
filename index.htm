@@ -5,12 +5,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Security-Policy" content="
-default-src 'self';
-script-src 'self' 'unsafe-inline';
-style-src 'self' 'unsafe-inline' https://use.typekit.net;
-img-src 'self' data:;
-connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com;
-font-src 'self' https://use.typekit.net data:;
+    default-src 'self';
+    script-src 'self';
+    style-src 'self' https://use.typekit.net;
+    img-src 'self' data:;
+    connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com;
+    font-src 'self' https://use.typekit.net data:;
 ">
     <title>Previsão do Tempo</title>
     <link rel="icon" type="image/svg+xml" href="./assets/icons/favicon.svg">
@@ -46,8 +46,7 @@ font-src 'self' https://use.typekit.net data:;
 
                 <!-- Informações principais: ícone + temperatura -->
                 <div class="result__main">
-                    <figure class="result__main-icon" id="weatherIcon">
-                    </figure>
+                    <div class="result__main-icon" id="weatherIcon" role="img" aria-labelledby="weatherLabel"></div>
                     <div class="result__temperature_container">
                         <p class="result__temperature" id="temperature"></p>
                         <span class="weather__label" id="weatherLabel"></span>
@@ -76,7 +75,7 @@ font-src 'self' https://use.typekit.net data:;
 
             </section>
 
-            <p class="card__error hidden" id="errorMsg"></p>
+            <p class="card__error hidden" id="errorMsg" role="alert" aria-live="assertive"></p>
 
         </article>
     </main>

@@ -1487,7 +1487,7 @@ evitando acúmulo de classes.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line292">line 292</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line384">line 384</a>
     </li></ul></dd>
     
 
@@ -1649,7 +1649,7 @@ evitando acúmulo de classes.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line275">line 275</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line367">line 367</a>
     </li></ul></dd>
     
 
@@ -1760,7 +1760,7 @@ evitando acúmulo de classes.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line368">line 368</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line460">line 460</a>
     </li></ul></dd>
     
 
@@ -1810,6 +1810,491 @@ evitando acúmulo de classes.</p>
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>clearError(); // limpa qualquer erro visível antes de nova busca</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~formatLocationName"><span class="type-signature">(inner) </span>formatLocationName<span class="signature">(location)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Formata o nome de exibição de uma localização retornada pela API de Geocoding.
+Adapta o formato conforme o tipo de lugar: cidade, estado ou país.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>location</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Objeto de localização retornado pela API.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Nome do lugar.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>country</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Nome do país.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>admin1</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Nome do estado/província (opcional).</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line245">line 245</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Nome formatado para exibição. Ex: &quot;São Paulo, SP, Brazil&quot;</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>formatLocationName({ name: 'Campinas', admin1: 'São Paulo', country: 'Brazil' });// 'Campinas, SP, Brazil'formatLocationName({ name: 'Rio de Janeiro', admin1: 'Rio de Janeiro', country: 'Brazil' });// 'Rio de Janeiro, RJ, Brazil'formatLocationName({ name: 'Brazil', country: 'Brazil' });// 'Brazil'</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~getStateCode"><span class="type-signature">(inner) </span>getStateCode<span class="signature">(stateName, country)</span><span class="type-signature"> &rarr; {string|null}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Retorna a sigla (UF) de um estado brasileiro dado o nome completo.
+Retorna <code>null</code> para países estrangeiros ou estados não mapeados.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>stateName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">null</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Nome completo do estado em português.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>country</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">null</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Nome do país em inglês ou português.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line270">line 270</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Sigla do estado (ex: 'SP', 'RJ') ou <code>null</code> se não encontrado.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+|
+
+<span class="param-type">null</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>getStateCode('São Paulo', 'Brazil');    // 'SP'getStateCode('California', 'US');       // nullgetStateCode(null, 'Brazil');           // null</code></pre>
 
 
 
@@ -2040,7 +2525,7 @@ O item de amanhã recebe a classe <code>forecast__item--tomorrow</code> para des
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line236">line 236</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line328">line 328</a>
     </li></ul></dd>
     
 
@@ -2202,7 +2687,7 @@ as requisições estão em andamento.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line166">line 166</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line171">line 171</a>
     </li></ul></dd>
     
 
@@ -2363,7 +2848,7 @@ o resultado fique oculto e a busca fique visível.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line353">line 353</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line445">line 445</a>
     </li></ul></dd>
     
 
@@ -2475,7 +2960,7 @@ Atalho semântico para <code>switchView(searchSection, resultSection)</code>.</p
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line327">line 327</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line419">line 419</a>
     </li></ul></dd>
     
 
@@ -2582,7 +3067,7 @@ Atalho semântico para <code>switchView(resultSection, searchSection)</code>.</p
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line337">line 337</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line429">line 429</a>
     </li></ul></dd>
     
 
@@ -2763,7 +3248,7 @@ reiniciar a animação CSS mesmo que a classe já estivesse presente.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line313">line 313</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line405">line 405</a>
     </li></ul></dd>
     
 
@@ -3188,7 +3673,7 @@ umidade, ícone do clima, temas visuais e previsão dos próximos dias.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line196">line 196</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line201">line 201</a>
     </li></ul></dd>
     
 
@@ -3263,7 +3748,7 @@ umidade, ícone do clima, temas visuais e previsão dos próximos dias.</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Mar 31 2026 14:59:36 GMT-0300 (Horário Padrão de Brasília)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Mar 31 2026 19:30:22 GMT-0300 (Horário Padrão de Brasília)
 </footer>
 
 <script> prettyPrint(); </script>
