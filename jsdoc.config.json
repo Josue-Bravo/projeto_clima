@@ -1,0 +1,12 @@
+{
+  "source": {
+    "include": ["assets/js"],
+    "includePattern": ".+\\.js$"
+  },
+  "opts": {
+    "destination": "./docs",
+    "recurse": true,
+    "tutorials": "./tutorials"
+  },
+  "plugins": ["plugins/markdown"]
+}

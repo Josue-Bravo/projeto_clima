@@ -1,0 +1,226 @@
+/**
+ * @fileoverview Módulo de comunicação com as APIs Open-Meteo.
+ * Parte da aplicação de Previsão do Tempo — um site que permite
+ * ao usuário consultar o clima atual e a previsão dos próximos 7 dias
+ * de qualquer cidade do mundo, sem necessidade de autenticação.
+ *
+ * Responsável por validação de entrada, busca de coordenadas geográficas
+ * e recuperação de dados meteorológicos.
+ *
+ * @module api
+ */
+
+// ===== CONSTANTES =====
+const GEO_API     = 'https://geocoding-api.open-meteo.com/v1/search';
+const WEATHER_API = 'https://api.open-meteo.com/v1/forecast';
+
+// ===== WEATHER CODES =====
+
+/**
+ * Mapa de códigos meteorológicos WMO para informações de exibição.
+ * Cada entrada contém o ícone SVG correspondente, um label descritivo
+ * e o tema visual associado ao tipo de clima.
+ *
+ * @constant {Object.<number, {icon: string, label: string, theme: string}>}
+ *
+ * @example
+ * weatherCodes[0];
+ * // { icon: 'sun.svg', label: 'Céu limpo', theme: 'sunny' }
+ *
+ * weatherCodes[63];
+ * // { icon: 'rain.svg', label: 'Chuva moderada', theme: 'rainy' }
+ */
+export const weatherCodes = {
+    0:  { icon: 'sun.svg',   label: 'Céu limpo',                  theme: 'sunny'  },
+    1:  { icon: 'sun.svg',   label: 'Principalmente limpo',        theme: 'sunny'  },
+    2:  { icon: 'cloud.svg', label: 'Parcialmente nublado',        theme: 'cloudy' },
+    3:  { icon: 'cloud.svg', label: 'Nublado',                     theme: 'cloudy' },
+    45: { icon: 'fog.svg',   label: 'Névoa',                       theme: 'cloudy' },
+    48: { icon: 'fog.svg',   label: 'Névoa com gelo',              theme: 'cloudy' },
+    51: { icon: 'rain.svg',  label: 'Garoa leve',                  theme: 'rainy'  },
+    53: { icon: 'rain.svg',  label: 'Garoa moderada',              theme: 'rainy'  },
+    55: { icon: 'rain.svg',  label: 'Garoa intensa',               theme: 'rainy'  },
+    61: { icon: 'rain.svg',  label: 'Chuva leve',                  theme: 'rainy'  },
+    63: { icon: 'rain.svg',  label: 'Chuva moderada',              theme: 'rainy'  },
+    65: { icon: 'rain.svg',  label: 'Chuva intensa',               theme: 'rainy'  },
+    80: { icon: 'rain.svg',  label: 'Pancadas leves',              theme: 'rainy'  },
+    81: { icon: 'rain.svg',  label: 'Pancadas moderadas',          theme: 'rainy'  },
+    82: { icon: 'storm.svg', label: 'Pancadas intensas',           theme: 'storm'  },
+    95: { icon: 'storm.svg', label: 'Tempestade',                  theme: 'storm'  },
+    96: { icon: 'storm.svg', label: 'Tempestade com granizo leve', theme: 'storm'  },
+    99: { icon: 'storm.svg', label: 'Tempestade com granizo',      theme: 'storm'  },
+};
+
+// ===== VALIDAÇÃO =====
+
+/**
+ * Valida o nome de uma cidade informado pelo usuário.
+ * Remove espaços extras e verifica se o valor não está vazio.
+ *
+ * @param {string|null|undefined} city - Nome da cidade a ser validado.
+ * @returns {string} Nome da cidade sem espaços nas extremidades.
+ * @throws {Error} Se o valor for nulo, undefined, vazio ou composto só de espaços.
+ *
+ * @example
+ * validateCity('São Paulo');
+ * // retorna 'São Paulo'
+ *
+ * validateCity('   ');
+ * // lança Error: 'Digite o nome de uma cidade.'
+ *
+ * validateCity(null);
+ * // lança Error: 'Digite o nome de uma cidade.'
+ */
+export function validateCity(city) {
+    if (!city || city.trim() === '') {
+        throw new Error('Digite o nome de uma cidade.');
+    }
+    return city.trim();
+}
+
+// ===== GEOCODING =====
+
+/**
+ * Busca as coordenadas geográficas de uma cidade pelo nome
+ * utilizando a API de Geocoding do Open-Meteo.
+ *
+ * @async
+ * @param {string} city - Nome da cidade já validado (sem espaços extras).
+ * @returns {Promise<{name: string, latitude: number, longitude: number}>}
+ *   Objeto com o nome oficial, latitude e longitude da cidade encontrada.
+ * @throws {Error} Se a requisição HTTP falhar (status não-ok).
+ * @throws {Error} Se nenhum resultado for encontrado para o nome informado.
+ *
+ * @example
+ * const coords = await fetchCoordinates('Manaus');
+ * console.log(coords.latitude);  // -3.10194
+ * console.log(coords.longitude); // -60.025
+ * console.log(coords.name);      // 'Manaus'
+ *
+ * await fetchCoordinates('xyzabcqwerty');
+ * // lança Error: 'Cidade não encontrada. Tente novamente.'
+ */
+export async function fetchCoordinates(city) {
+    const url = `${GEO_API}?name=${encodeURIComponent(city)}&count=1&language=pt`;
+    const response = await fetch(url);
+
+    if (!response.ok) throw new Error('Erro na requisição de coordenadas.');
+
+    const data = await response.json();
+
+    if (!data.results || data.results.length === 0) {
+        throw new Error('Cidade não encontrada. Tente novamente.');
+    }
+
+    return data.results[0];
+}
+
+// ===== CLIMA =====
+
+/**
+ * Busca os dados meteorológicos completos de uma localização geográfica
+ * utilizando a API de previsão do Open-Meteo.
+ *
+ * Retorna clima atual (temperatura, vento, código do clima),
+ * umidade horária e previsão diária para os próximos 7 dias.
+ *
+ * @async
+ * @param {number} latitude  - Latitude da localização.
+ * @param {number} longitude - Longitude da localização.
+ * @returns {Promise<{
+ *   current_weather: {
+ *     temperature: number,
+ *     windspeed: number,
+ *     weathercode: number
+ *   },
+ *   hourly: {
+ *     relativehumidity_2m: number[]
+ *   },
+ *   daily: {
+ *     time: string[],
+ *     weathercode: number[],
+ *     temperature_2m_max: number[],
+ *     temperature_2m_min: number[]
+ *   }
+ * }>} Objeto com dados meteorológicos completos.
+ * @throws {Error} Se a requisição HTTP falhar (status não-ok).
+ * @throws {Error} Se o campo `current_weather` estiver ausente na resposta.
+ *
+ * @example
+ * const data = await fetchWeather(-23.55, -46.63);
+ * console.log(data.current_weather.temperature); // 27.4
+ * console.log(data.current_weather.windspeed);   // 12.5
+ * console.log(data.daily.time);                  // ['2025-01-01', ...]
+ */
+export async function fetchWeather(latitude, longitude) {
+    const params = new URLSearchParams({
+        latitude,
+        longitude,
+        current_weather: true,
+        hourly:          'relativehumidity_2m',
+        daily:           'weathercode,temperature_2m_max,temperature_2m_min',
+        timezone:        'auto',
+        forecast_days:   7,
+    });
+
+    const url = `${WEATHER_API}?${params}`;
+    const response = await fetch(url);
+
+    if (!response.ok) throw new Error('Erro na requisição do clima.');
+
+    const data = await response.json();
+
+    if (!data.current_weather) {
+        throw new Error('Não foi possível obter o clima.');
+    }
+
+    return data;
+}
+
+// ===== TEMAS =====
+
+/**
+ * Determina o tema de temperatura com base no valor em graus Celsius.
+ *
+ * | Faixa         | Tema     |
+ * |---------------|----------|
+ * | Abaixo de 10° | `cold`   |
+ * | 10° a 19°     | `mild`   |
+ * | 20° a 29°     | `warm`   |
+ * | 30° ou mais   | `hot`    |
+ *
+ * @param {number} temp - Temperatura atual em graus Celsius.
+ * @returns {string} Nome do tema: `'cold'`, `'mild'`, `'warm'` ou `'hot'`.
+ *
+ * @example
+ * getTempTheme(8);  // 'cold'
+ * getTempTheme(18); // 'mild'
+ * getTempTheme(25); // 'warm'
+ * getTempTheme(35); // 'hot'
+ */
+export function getTempTheme(temp) {
+    if (temp < 10) return 'cold';
+    if (temp < 20) return 'mild';
+    if (temp < 30) return 'warm';
+    return 'hot';
+}
+
+/**
+ * Retorna as informações de exibição para um código meteorológico WMO.
+ * Caso o código não esteja mapeado em `weatherCodes`, retorna o fallback
+ * correspondente ao código `0` (Céu limpo).
+ *
+ * @param {number} weathercode - Código meteorológico WMO retornado pela API.
+ * @returns {{icon: string, label: string, theme: string}}
+ *   Objeto com o nome do arquivo SVG, descrição textual e tema visual.
+ *
+ * @example
+ * getWeatherInfo(63);
+ * // { icon: 'rain.svg', label: 'Chuva moderada', theme: 'rainy' }
+ *
+ * getWeatherInfo(9999);
+ * // { icon: 'sun.svg', label: 'Céu limpo', theme: 'sunny' } ← fallback
+ */
+export function getWeatherInfo(weathercode) {
+    return weatherCodes[weathercode] ?? weatherCodes[0];
+}

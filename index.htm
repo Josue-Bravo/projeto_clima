@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="
+default-src 'self';
+script-src 'self' 'unsafe-inline';
+style-src 'self' 'unsafe-inline' https://use.typekit.net;
+img-src 'self' data:;
+connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com;
+font-src 'self' https://use.typekit.net data:;
+">
+    <title>Previsão do Tempo</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/icons/favicon.svg">
+    <link rel="stylesheet" href="./assets/css/style.css" />
+</head>
+
+<body>
+
+    <main class="container">
+        <article class="card">
+
+            <section class="card__search">
+                <h1 class="card__title">Previsão do Tempo</h1>
+
+                <div class="card__search_div">
+                    <label for="cityInput" class="visually-hidden">Cidade</label>
+
+                    <input class="search__input" type="text" id="cityInput"
+                        placeholder="Digite o nome de uma cidade..." />
+                    <button class="search__btn" id="searchBtn" aria-label="Buscar cidade">Buscar</button>
+                </div>
+            </section>
+
+            <div class="spinner hidden" id="spinner"></div>
+
+            <section class="card__result hidden" id="result">
+
+                <!-- Botão de voltar no topo -->
+                <button class="result__btn" id="backBtn">← Voltar</button>
+
+                <!-- Nome da cidade -->
+                <h2 class="result__city" id="cityName"></h2>
+
+                <!-- Informações principais: ícone + temperatura -->
+                <div class="result__main">
+                    <figure class="result__main-icon" id="weatherIcon">
+                    </figure>
+                    <div class="result__temperature_container">
+                        <p class="result__temperature" id="temperature"></p>
+                        <span class="weather__label" id="weatherLabel"></span>
+                    </div>
+                </div>
+
+                <!-- Card interno: clima de hoje -->
+                <div class="result__today">
+
+                    <!-- Vento e Umidade -->
+                    <div class="result__today-top">
+                        <div class="result__today-item">
+                            <span class="today__label">💨 Vento</span>
+                            <strong class="today__value" id="windspeed"></strong>
+                        </div>
+                        <div class="result__today-item">
+                            <span class="today__label">💧 Umidade</span>
+                            <strong class="today__value" id="humidity"></strong>
+                        </div>
+                    </div>
+
+                    <!-- Previsão dos próximos dias -->
+                    <ul class="result__forecast" id="forecast"></ul>
+
+                </div>
+
+            </section>
+
+            <p class="card__error hidden" id="errorMsg"></p>
+
+        </article>
+    </main>
+
+    <footer class="footer">
+        <p class="footer__credits">
+            Dados fornecidos por
+            <a class="footer__link" href="https://open-meteo.com" target="_blank" rel="noopener noreferrer">
+                Open-Meteo
+            </a>
+            sob licença
+            <a class="footer__link" href="https://creativecommons.org/licenses/by/4.0/" target="_blank"
+                rel="noopener noreferrer">
+                CC BY 4.0
+            </a>.
+        </p>
+
+        <p class="footer__disclaimer">
+            Esta aplicação apenas consome os dados da API e não se responsabiliza pela precisão, disponibilidade ou
+            atualizações das informações meteorológicas.<br>
+            Nenhum dado pessoal é armazenado. As consultas são enviadas diretamente para a API Open-Meteo.
+        </p>
+    </footer>
+
+    <script type="module" src="./assets/js/script.js"></script>
+</body>
+
+</html>
