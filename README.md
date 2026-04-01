@@ -14,10 +14,13 @@ Este projeto permite ao usuário buscar uma cidade e visualizar:
 
 A aplicação consome APIs públicas do Open-Meteo e implementa boas práticas de desenvolvimento frontend, incluindo validação de dados, tratamento de erros, testes unitários e documentação automatizada.
 
+🔗 **[Acesse o deploy aqui](https://josue-bravo.github.io/projeto_clima/)**
+
 ---
 
 ## 📋 Índice
 
+- [Deploy](#-deploy)
 - [Funcionalidades](#-funcionalidades)
 - [Tecnologias](#-tecnologias)
 - [Estrutura do Projeto](#-estrutura-do-projeto)
@@ -30,6 +33,14 @@ A aplicação consome APIs públicas do Open-Meteo e implementa boas práticas d
 - [Segurança e Privacidade](#-segurança-e-privacidade)
 - [Licença e Atribuições](#-licença-e-atribuições)
 - [Autor](#-autor)
+
+---
+
+## 🚀 Deploy
+
+A aplicação está disponível em produção via GitHub Pages:
+
+🔗 **[https://josue-bravo.github.io/projeto_clima/](https://josue-bravo.github.io/projeto_clima/)**
 
 ---
 
